@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore quantum superposition with Qiskit and an optional Anki Vector robot.">
+  <title>Quantum Robot Oracle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Quantum Robot Oracle home"><span class="brand-mark" aria-hidden="true">Q</span><span>Quantum Robot Oracle</span></a>
+    <nav aria-label="Primary"><a href="#learn">Learn</a><a href="#credits">Credits</a><a class="github-link" href="https://github.com/rparr23/quantum-robot-oracle">GitHub ↗</a></nav>
+  </header>
+
+  <main id="top">
+    <section class="intro">
+      <div>
+        <h1>Ask the quantum oracle.</h1>
+        <p>Pose a yes/no question. We’ll prepare one qubit in superposition, measure it with Qiskit Aer, and reveal what quantum randomness decides.</p>
+      </div>
+      <div class="orbit" aria-hidden="true"><span></span><span></span><i>0<br>1</i></div>
+    </section>
+
+    <form id="oracle-form" class="controls">
+      <label>YOUR YES/NO QUESTION<input id="question" name="question" maxlength="240" required placeholder="Will I learn something surprising?" autocomplete="off"></label>
+      <label>SHOTS<select id="shots" name="shots"><option>128</option><option>256</option><option>512</option><option selected>1024</option><option>2048</option><option>4096</option></select></label>
+      <button id="run" type="submit"><span aria-hidden="true">▶</span> Run oracle</button>
+    </form>
+    <p id="error" class="error" role="alert" hidden></p>
+
+    <section class="lab" aria-live="polite">
+      <article class="circuit-panel">
+        <header><h2>Quantum circuit</h2><span>1 QUBIT · 1 CLASSICAL BIT</span></header>
+        <div class="circuit" role="img" aria-label="A one-qubit circuit with Hadamard and measurement gates">
+          <span class="wire-label">q₀ |0⟩</span><span class="wire"></span><strong class="gate h">H</strong><span class="wire"></span><strong class="gate measure">M</strong><span class="wire dashed"></span>
+          <span class="wire-label">c₀ 0</span><span class="double-wire"></span><span class="measure-line"></span>
+        </div>
+        <div class="legend"><span><b class="mini h">H</b> Hadamard</span><span><b class="mini measure">M</b> Measurement</span><span>– – Classical output</span></div>
+        <pre id="circuit-text" class="sr-only"></pre>
+      </article>
+
+      <article class="results-panel">
+        <header><h2>Measurement results</h2><span id="shot-label">AWAITING RUN</span></header>
+        <div id="empty" class="empty">Your probability field will appear here.</div>
+        <div id="results" hidden>
+          <p class="answer">The oracle says <strong id="answer">—</strong></p>
+          <div class="result-row"><span>No |0⟩</span><div class="bar"><i id="bar-0"></i></div><b id="prob-0">0%</b><small id="count-0">0</small></div>
+          <div class="result-row"><span>Yes |1⟩</span><div class="bar coral"><i id="bar-1"></i></div><b id="prob-1">0%</b><small id="count-1">0</small></div>
+          <p class="random-note">Each run varies. With more shots, both probabilities tend toward 50%.</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="learn" class="learn">
+      <div><h2>What’s happening?</h2><p>The Hadamard gate places the qubit in an equal superposition of |0⟩ and |1⟩. Before measurement, both outcomes are possible. Measurement produces one classical result per shot.</p></div>
+      <aside><span class="step">01</span><p><strong>Prepare</strong><br>Begin with one qubit in |0⟩.</p><span class="step">02</span><p><strong>Transform</strong><br>Apply H for equal amplitudes.</p><span class="step">03</span><p><strong>Measure</strong><br>Sample the quantum state.</p></aside>
+    </section>
+
+    <section class="robot">
+      <div><h2>Optional robot</h2><p>Let an Anki Vector speak the measured answer. The simulator is fully functional without robot hardware.</p></div>
+      <div class="robot-status"><span class="robot-face" aria-hidden="true">● &nbsp; ●</span><p>Status<br><strong>{{ 'Adapter enabled' if vector_enabled else 'Not connected' }}</strong></p><button id="speak" disabled>Speak last answer</button></div>
+    </section>
+
+    <section id="credits" class="credits">
+      <h2>Built on a delightful idea.</h2>
+      <p>Inspired by <a href="https://medium.com/qiskit/a-robot-and-a-quantum-computer-41d6c778a5bf">James Weaver’s article</a> and <a href="https://github.com/DevanshiArora40/ibmq-anki-vector">Devanshi Arora’s ibmq-anki-vector project</a>. This independent adaptation gratefully credits both creators.</p>
+    </section>
+  </main>
+  <footer><span>quantum_oracle.run()</span><span>Educational randomness, not prediction.</span><a href="https://github.com/rparr23/quantum-robot-oracle/blob/main/NOTICE.md">Attribution</a></footer>
+  <script>window.VECTOR_ENABLED = {{ 'true' if vector_enabled else 'false' }};</script>
+  <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+</body>
+</html>
+
